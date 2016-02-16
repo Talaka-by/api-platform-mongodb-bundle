@@ -4,7 +4,23 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
-    <!--<services>-->
+    <services>
+        <service id="talaka_api_platform_mongodb.doctrine.event_subscriber" class="Dunglas\ApiBundle\Doctrine\EventSubscriber">
+            <argument type="service" id="event_dispatcher" />
+            <argument type="service" id="doctrine_mongodb" />
 
-    <!--</services>-->
+            <tag name="kernel.event_subscriber" />
+        </service>
+
+        <service id="talaka_api_platform_mongodb.doctrine.mongodb.data_provider" class="Talaka\APIPlatform\MongoDBBundle\Doctrine\Odm\DataProvider">
+            <argument type="service" id="doctrine_mongodb" />
+            <argument>%api.collection.order%</argument>
+            <argument>%api.collection.pagination.page_parameter_name%</argument>
+            <argument>%api.collection.pagination.items_per_page.number%</argument>
+            <argument>%api.collection.pagination.items_per_page.enable_client_request%</argument>
+            <argument>%api.collection.pagination.items_per_page.parameter_name%</argument>
+
+            <tag name="api.data_provider" />
+        </service>
+    </services>
 </container>
