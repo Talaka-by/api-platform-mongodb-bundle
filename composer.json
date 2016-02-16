@@ -4,11 +4,9 @@
     "type": "library",
     "require": {
         "dunglas/api-bundle": "~1.0",
+        "dunglas/php-schema": "~0.4",
         "doctrine/mongodb-odm": "~1.0",
         "doctrine/mongodb-odm-bundle": "~3.0"
-    },
-    "require-dev": {
-        "dunglas/php-schema": "~0.4"
     },
     "license": "MIT",
     "authors": [
