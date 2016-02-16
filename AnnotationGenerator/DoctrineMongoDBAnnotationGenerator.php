@@ -67,7 +67,7 @@ class DoctrineMongoDBAnnotationGenerator extends AbstractAnnotationGenerator
                 case 'Date':
                     // No break
                 case 'DateTime':
-                    $type = 'dates';
+                    $type = 'date';
                     break;
                 case 'Time':
                     $type = 'time';
