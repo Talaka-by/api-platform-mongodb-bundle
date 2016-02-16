@@ -89,15 +89,17 @@ class DoctrineMongoDBAnnotationGenerator extends AbstractAnnotationGenerator
         }
 
         if (isset($type)) {
-            $annotation = '@MongoDB\Field';
+            if (!$field['isId']) {
+                $annotation = '@MongoDB\Field';
 
-            if ($field['isArray']) {
-                $type = 'collection';
+                if ($field['isArray']) {
+                    $type = 'collection';
+                }
+
+                $annotation .= sprintf('(type="%s")', $type);
+
+                $annotations[] = $annotation;
             }
-
-            $annotation .= sprintf('(type="%s")', $type);
-
-            $annotations[] = $annotation;
         } else {
             switch ($field['cardinality']) {
                 case (CardinalitiesExtractor::CARDINALITY_0_1 || CardinalitiesExtractor::CARDINALITY_1_1):
@@ -115,7 +117,7 @@ class DoctrineMongoDBAnnotationGenerator extends AbstractAnnotationGenerator
         }
 
         if ($field['isId']) {
-            $annotations[] = '@MongoDB\Id(strategy="INCREMENT", type="integer")';
+            $annotations[] = '@MongoDB\Id';
         }
 
         return $annotations;
