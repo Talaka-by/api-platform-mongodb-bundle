@@ -9,9 +9,9 @@
 
 namespace Talaka\APIPlatform\MongoDBBundle\AnnotationGenerator;
 
-use SchemaOrgModel\AnnotationGenerator\AbstractAnnotationGenerator;
-use SchemaOrgModel\CardinalitiesExtractor;
-use SchemaOrgModel\TypesGenerator;
+use ApiPlatform\SchemaGenerator\AnnotationGenerator\AbstractAnnotationGenerator;
+use ApiPlatform\SchemaGenerator\CardinalitiesExtractor;
+use ApiPlatform\SchemaGenerator\TypesGenerator;
 
 /**
  * Doctrine MongoDB annotation generator.
