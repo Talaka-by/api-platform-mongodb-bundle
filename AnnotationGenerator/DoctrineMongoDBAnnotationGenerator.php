@@ -102,15 +102,22 @@ class DoctrineMongoDBAnnotationGenerator extends AbstractAnnotationGenerator
             }
         } else {
             switch ($field['cardinality']) {
-                case (CardinalitiesExtractor::CARDINALITY_0_1 || CardinalitiesExtractor::CARDINALITY_1_1):
+                case ($field['cardinality'] === CardinalitiesExtractor::CARDINALITY_0_1
+                    || $field['cardinality'] === CardinalitiesExtractor::CARDINALITY_1_1):
+
                     $annotations[] = sprintf('@MongoDB\ReferenceOne(targetDocument="%s", simple=true))', $this->getRelationName($field['range']));
                     break;
-                case CardinalitiesExtractor::CARDINALITY_UNKNOWN:
+                case ($field['cardinality'] === CardinalitiesExtractor::CARDINALITY_UNKNOWN):
                     // No break
-                case (CardinalitiesExtractor::CARDINALITY_N_0 || CardinalitiesExtractor::CARDINALITY_N_1):
+                case ($field['cardinality'] === CardinalitiesExtractor::CARDINALITY_N_0
+                    || $field['cardinality'] === CardinalitiesExtractor::CARDINALITY_N_1):
+
                     $annotations[] = sprintf('@MongoDB\ReferenceOne(targetDocument="%s", simple=true))', $this->getRelationName($field['range']));
                     break;
-                case (CardinalitiesExtractor::CARDINALITY_0_N || CardinalitiesExtractor::CARDINALITY_1_N || CardinalitiesExtractor::CARDINALITY_N_N):
+                case ($field['cardinality'] === CardinalitiesExtractor::CARDINALITY_0_N
+                    || $field['cardinality'] === CardinalitiesExtractor::CARDINALITY_1_N
+                    || $field['cardinality'] === CardinalitiesExtractor::CARDINALITY_N_N):
+
                     $annotations[] = sprintf('@ODM\ReferenceMany(targetDocument="%s", simple=true)', $this->getRelationName($field['range']));
                     break;
             }
