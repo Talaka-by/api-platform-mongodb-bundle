@@ -118,7 +118,7 @@ class DoctrineMongoDBAnnotationGenerator extends AbstractAnnotationGenerator
                     || $field['cardinality'] === CardinalitiesExtractor::CARDINALITY_1_N
                     || $field['cardinality'] === CardinalitiesExtractor::CARDINALITY_N_N):
 
-                    $annotations[] = sprintf('@ODM\ReferenceMany(targetDocument="%s", simple=true)', $this->getRelationName($field['range']));
+                    $annotations[] = sprintf('@MongoDB\ReferenceMany(targetDocument="%s", simple=true)', $this->getRelationName($field['range']));
                     break;
             }
         }
