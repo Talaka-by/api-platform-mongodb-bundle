@@ -105,7 +105,8 @@ class DoctrineMongoDBAnnotationGenerator extends AbstractAnnotationGenerator
                 case ($field['cardinality'] === CardinalitiesExtractor::CARDINALITY_0_1
                     || $field['cardinality'] === CardinalitiesExtractor::CARDINALITY_1_1):
 
-                    $annotations[] = sprintf('@MongoDB\ReferenceOne(targetDocument="%s", simple=true))', $this->getRelationName($field['range']));
+                    $referenceType = $field['isEmbedded'] ? "EmbedOne" : "ReferenceOne";
+                    $annotations[] = sprintf('@MongoDB\%s(targetDocument="%s", simple=true))', $referenceType, $this->getRelationName($field['range']));
                     break;
                 case ($field['cardinality'] === CardinalitiesExtractor::CARDINALITY_UNKNOWN):
                     // No break
@@ -118,7 +119,8 @@ class DoctrineMongoDBAnnotationGenerator extends AbstractAnnotationGenerator
                     || $field['cardinality'] === CardinalitiesExtractor::CARDINALITY_1_N
                     || $field['cardinality'] === CardinalitiesExtractor::CARDINALITY_N_N):
 
-                    $annotations[] = sprintf('@MongoDB\ReferenceMany(targetDocument="%s", simple=true)', $this->getRelationName($field['range']));
+                    $referenceType = $field['isEmbedded'] ? "EmbedMany" : "ReferenceMany";
+                    $annotations[] = sprintf('@MongoDB\%s(targetDocument="%s", simple=true)', $referenceType, $this->getRelationName($field['range']));
                     break;
             }
         }
@@ -155,7 +157,7 @@ class DoctrineMongoDBAnnotationGenerator extends AbstractAnnotationGenerator
         $class = $this->classes[$range];
 
         if (isset($class['interfaceName'])) {
-            return $class['interfaceName'];
+            return sprintf('%s\\%s', $class['interfaceNamespace'], $class['interfaceName']);
         }
 
         return $class['name'];
