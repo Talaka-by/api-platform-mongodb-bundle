@@ -33,6 +33,8 @@ class DoctrineMongoDBAnnotationGenerator extends AbstractAnnotationGenerator
 
         if (isset($this->config['types'][$class['resource']->localName()]['doctrine']['inheritanceMapping'])) {
             $inheritanceMapping = $this->config['types'][$class['resource']->localName()]['doctrine']['inheritanceMapping'];
+        } elseif ($class['embeddable']) {
+            $inheritanceMapping = '@MongoDB\EmbeddedDocument';
         } else {
             $inheritanceMapping = $class['abstract'] ? '@MongoDB\MappedSuperclass' : '@MongoDB\Document';
         }
@@ -101,26 +103,34 @@ class DoctrineMongoDBAnnotationGenerator extends AbstractAnnotationGenerator
                 $annotations[] = $annotation;
             }
         } else {
+            $simple = $field['isEmbedded'] ? '' : ', simple=true';
             switch ($field['cardinality']) {
                 case ($field['cardinality'] === CardinalitiesExtractor::CARDINALITY_0_1
                     || $field['cardinality'] === CardinalitiesExtractor::CARDINALITY_1_1):
 
                     $referenceType = $field['isEmbedded'] ? "EmbedOne" : "ReferenceOne";
-                    $annotations[] = sprintf('@MongoDB\%s(targetDocument="%s", simple=true))', $referenceType, $this->getRelationName($field['range']));
+                    $annotations[] = sprintf('@MongoDB\%s(targetDocument="%s"%s)',
+                        $referenceType,
+                        $this->getRelationName($field['range']),
+                        $simple);
                     break;
                 case ($field['cardinality'] === CardinalitiesExtractor::CARDINALITY_UNKNOWN):
                     // No break
                 case ($field['cardinality'] === CardinalitiesExtractor::CARDINALITY_N_0
                     || $field['cardinality'] === CardinalitiesExtractor::CARDINALITY_N_1):
 
-                    $annotations[] = sprintf('@MongoDB\ReferenceOne(targetDocument="%s", simple=true))', $this->getRelationName($field['range']));
+                    $annotations[] = sprintf('@MongoDB\ReferenceOne(targetDocument="%s", simple=true))',
+                        $this->getRelationName($field['range']));
                     break;
                 case ($field['cardinality'] === CardinalitiesExtractor::CARDINALITY_0_N
                     || $field['cardinality'] === CardinalitiesExtractor::CARDINALITY_1_N
                     || $field['cardinality'] === CardinalitiesExtractor::CARDINALITY_N_N):
 
                     $referenceType = $field['isEmbedded'] ? "EmbedMany" : "ReferenceMany";
-                    $annotations[] = sprintf('@MongoDB\%s(targetDocument="%s", simple=true)', $referenceType, $this->getRelationName($field['range']));
+                    $annotations[] = sprintf('@MongoDB\%s(targetDocument="%s"%s)',
+                        $referenceType,
+                        $this->getRelationName($field['range']),
+                        $simple);
                     break;
             }
         }
